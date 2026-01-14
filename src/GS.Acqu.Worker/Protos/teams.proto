@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "SportsData.Service";
+
+package SportsData;
+
+message CreateTeamRequest {
+  int32 sportId = 1;
+  string name = 3;
+  map<string, string> names = 4;
+  int32 sort = 5;
+  map<string, int32> sourceMapping = 6;
+  string updatedBy = 7;
+}

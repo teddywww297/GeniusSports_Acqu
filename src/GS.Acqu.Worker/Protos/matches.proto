@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+option csharp_namespace = "SportsData.Service";
+
+package SportsData;
+
+message MatchesRequest {
+	int32 sportId = 1;
+	google.protobuf.Timestamp startTime = 2;
+	google.protobuf.Timestamp endTime = 3;
+	repeated string competitionId = 4;
+	repeated int32 status = 5;
+	google.protobuf.StringValue lang = 6;
+}
+
+message MatchesResponse {
+  repeated MatchData items = 1;
+}
+
+message MatchData {
+  int32 matchId = 1;
+  string competitionId = 2;
+  string competition = 3;
+  string homeTeam = 4;
+  string awayTeam = 5;
+  google.protobuf.Timestamp matchTime = 6;
+  int32 status = 7;
+  string phase = 8;
+  google.protobuf.Duration clock = 9;
+  google.protobuf.BoolValue isClockRunning = 10;
+  oneof liveScore {
+	TeamScoreData teamScore = 11;
+  };
+  oneof details {
+	BasketballDetailsData basketball = 12;
+	FootballDetailsData football = 13;
+  };
+  google.protobuf.Timestamp timestamp = 14;
+}
+
+message WatchMatchRequest {
+  int32 sportId = 1;
+}
+
+message MatchFeed {
+	int32 matchId = 1;
+	int32 status = 2;
+	string phase = 3;
+	google.protobuf.Duration clock = 4;
+	google.protobuf.BoolValue isClockRunning = 5;
+	oneof liveScore {
+		TeamScoreData teamScore = 6;
+	};
+	google.protobuf.Timestamp timestamp = 8;
+}
+
+message TeamScoreData {
+  int32 home = 1;
+  int32 away = 2;
+}
+
+message PeriodScore {
+  int32 index = 1;
+  int32 home = 2;
+  int32 away = 3;
+}
+
+message TeamStatistic {
+  int32 home = 1;
+  int32 away = 2;
+}
+
+message FootballDetailsData {
+  repeated PeriodScore periodScores = 1;
+  TeamStatistic corners = 2;
+  TeamStatistic yellowCards = 3;
+  TeamStatistic secondYellowCards = 4;
+  TeamStatistic straightRedCards = 5;
+  TeamStatistic shotsOnTarget = 6;
+  TeamStatistic shotsOffTarget = 7;
+  TeamStatistic shotsOffWoodwork = 8;
+  TeamStatistic blockedShots = 9;
+  TeamStatistic fouls = 10;
+  TeamStatistic offsides = 11;
+  TeamStatistic substitutions = 12;
+  TeamStatistic penaltiesAwarded = 13;
+  TeamStatistic missedPenalties = 14;
+  TeamStatistic goalKicks = 15;
+  TeamStatistic throwIns = 16;
+  TeamStatistic kickOffs = 17;
+  bool isSecondLeg = 18;
+  TeamScoreData firstLegScore = 19;
+}
+
+message BasketballDetailsData {
+  repeated PeriodScore periodScores = 1;
+  TeamStatistic foul = 2;
+  google.protobuf.StringValue firstTeamToScore = 3;
+  google.protobuf.StringValue lastTeamToScore = 4;
+}

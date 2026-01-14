@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "SportsData.Service";
+
+package SportsData;
+
+message GetSportsRequest {
+  google.protobuf.StringValue lang = 1;
+}
+
+message GetSportsResponse {
+  repeated SportData sports = 1;
+}
+
+message SportData {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Data {
+  int32 id = 1;
+  string name = 2;
+}
+
+message SaveResponse {
+	bool isSuccess = 1;
+}

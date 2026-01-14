@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "SportsData.Service";
+
+package SportsData;
+
+message PreMatchMarketsRequest {
+	int32 sportId = 1;
+	string startDate = 2;
+	string endDate = 3;
+	MarketPeriod marketPeriod = 4;
+	repeated MarketType marketTypes = 5;
+	repeated MarketTradingStatus tradingStatuses = 6;
+}
+
+message InPlayMarketsRequest {
+	int32 sportId = 1;
+	MarketPeriod marketPeriod = 2;
+	repeated MarketType marketTypes = 3;
+	repeated MarketTradingStatus tradingStatuses = 4;
+}
+
+message MarketsResponse {
+	repeated MarketOddsData items = 1;
+}
+
+message MarketOddsData
+{
+	int32 matchId = 1;
+	repeated MarketData markets = 2;
+}
+
+message WatchMarketsRequest {
+  int32 sportId = 1;
+}
+
+message MarketFeed
+{
+	int32 matchId = 1;
+	repeated MarketData markets = 2;
+}
+
+message MarketData {
+	int32 marketId = 1;
+	int32 type = 3;
+	int32 period = 4;
+	int32 target = 5;
+	int32 scope = 6;
+	google.protobuf.StringValue line = 7;
+	google.protobuf.StringValue oddsDeviation = 8;
+	int32 tradingStatus = 9;
+	repeated SelectionData selections = 10;
+	google.protobuf.Timestamp timestamp = 11;
+}
+
+message SelectionData {
+	int32 id = 10;
+	string code = 11;
+	google.protobuf.StringValue odds = 12;
+}
+
+// 盤口時段
+enum MarketPeriod
+{
+	UnknownPeriod = 0;
+	// 全場
+    FullTime = 1;
+    // 上半場
+    FirstHalf = 2;
+}
+
+// 盤口類型
+enum MarketType
+{
+	UnknownType = 0;
+	// 勝負盤
+	Moneyline = 10;
+	// 1X2
+	MatchResult = 11;
+	// 讓球
+	Handicap = 20;
+	// 大小
+	OverUnder = 30;
+	// 單雙
+	OddEven = 40;
+}
+
+// 盤口交易狀態
+enum MarketTradingStatus
+{
+    // 預設 (尚未開盤)
+    Default = 0;
+    // 開盤
+    Open = 1;
+    // 暫停
+    Suspended = 2;
+    // 關盤
+    Closed = 3;
+}

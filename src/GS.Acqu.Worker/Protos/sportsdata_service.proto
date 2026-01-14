@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+import "Protos/sports.proto";
+import "Protos/competitions.proto";
+import "Protos/teams.proto";
+import "Protos/matches.proto";
+import "Protos/markets.proto";
+
+option csharp_namespace = "SportsData.Service";
+
+package SportsData;
+
+service Service {
+  rpc GetSports (GetSportsRequest) returns (GetSportsResponse);
+
+  rpc GetCompetitions (CompetitionsRequest) returns (CompetitionsResponse);
+
+  rpc GetCompetitionById (CompetitionRequest) returns (CompetitionResponse);
+
+  rpc CreateCompetition (CreateCompetitionRequest) returns (SaveResponse);
+
+  rpc CreateTeam (CreateTeamRequest) returns (SaveResponse);
+
+  rpc GetMatches (MatchesRequest) returns (MatchesResponse);
+
+  rpc WatchMatches(WatchMatchRequest) returns (stream MatchFeed);
+
+  rpc GetPreMatchMarkets(PreMatchMarketsRequest) returns (MarketsResponse);
+
+  rpc GetInPlayMarkets(InPlayMarketsRequest) returns (MarketsResponse);
+
+  rpc WatchPreMatchMarkets(WatchMarketsRequest) returns (stream MarketFeed);
+
+  rpc WatchInPlayMarkets(WatchMarketsRequest) returns (stream MarketFeed);
+
+  rpc AddCompetitionFromGenuis(AddCompetitionFromGenuisRequest) returns (SaveResponse);
+}

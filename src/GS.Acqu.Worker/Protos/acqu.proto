@@ -1,0 +1,168 @@
+syntax = "proto3";
+
+option csharp_namespace = "GS.Acqu.Worker.Protos";
+
+package acqu;
+
+// 資料採集服務
+service AcquService {
+  // 推送賽事資訊
+  rpc PushMatchInfo (MatchInfoRequest) returns (ProcessResponse);
+  
+  // 推送盤口賠率
+  rpc PushMarketOdds (MarketOddsRequest) returns (ProcessResponse);
+  
+  // 推送比賽結果
+  rpc PushMatchResult (MatchResultRequest) returns (ProcessResponse);
+  
+  // 串流推送賽事資訊 (高效能)
+  rpc StreamMatchInfo (stream MatchInfoRequest) returns (stream ProcessResponse);
+  
+  // 串流推送盤口賠率 (高效能)
+  rpc StreamMarketOdds (stream MarketOddsRequest) returns (stream ProcessResponse);
+}
+
+// 處理結果回應
+message ProcessResponse {
+  bool success = 1;
+  ProcessResultCode result_code = 2;
+  string message = 3;
+}
+
+// 處理結果代碼
+enum ProcessResultCode {
+  SUCCESS = 0;
+  MATCH_NOT_FOUND = 1;
+  LEAGUE_NOT_MATCHED = 2;
+  TEAM_NOT_MATCHED = 3;
+  INVALID_DATA = 4;
+  DATABASE_ERROR = 5;
+  SKIPPED = 6;
+}
+
+// 球種類型
+enum SportType {
+  SPORT_UNKNOWN = 0;
+  SOCCER = 1;
+  BASKETBALL = 2;
+  BASEBALL = 3;
+  ICE_HOCKEY = 4;
+  AMERICAN_FOOTBALL = 5;
+  TENNIS = 6;
+  ESPORTS = 7;
+  VOLLEYBALL = 8;
+  TABLE_TENNIS = 9;
+  BADMINTON = 10;
+}
+
+// 賽事類型
+enum GameType {
+  GAME_UNKNOWN = 0;
+  EARLY = 1;
+  TODAY = 2;
+  LIVE = 3;
+}
+
+// 比賽狀態
+enum MatchStatus {
+  STATUS_UNKNOWN = 0;
+  NOT_STARTED = 1;
+  IN_PROGRESS = 2;
+  PAUSED = 3;
+  HALF_TIME = 4;
+  ENDED = 5;
+  CANCELLED = 6;
+  POSTPONED = 7;
+  INTERRUPTED = 8;
+}
+
+// 盤口類型
+enum MarketType {
+  MARKET_UNKNOWN = 0;
+  HANDICAP = 1;
+  OVER_UNDER = 2;
+  MONEY_LINE = 3;
+  CORRECT_SCORE = 4;
+  HALF_FULL_TIME = 5;
+  ODD_EVEN = 6;
+  TOTAL_GOALS = 7;
+}
+
+// 全半場類型
+enum HalfType {
+  HALF_UNKNOWN = 0;
+  FULL_TIME = 1;
+  FIRST_HALF = 2;
+  SECOND_HALF = 3;
+}
+
+// 聯賽資訊
+message LeagueInfo {
+  string source_league_id = 1;
+  string name = 2;
+  optional string name_en = 3;
+  optional string name_cn = 4;
+}
+
+// 隊伍資訊
+message TeamInfo {
+  string source_team_id = 1;
+  string name = 2;
+  optional string name_en = 3;
+  optional string name_cn = 4;
+}
+
+// 比分資訊
+message ScoreInfo {
+  int32 home_score = 1;
+  int32 away_score = 2;
+  optional int32 home_half_score = 3;
+  optional int32 away_half_score = 4;
+  optional string period_scores = 5;
+}
+
+// 賽事資訊請求
+message MatchInfoRequest {
+  string source_match_id = 1;
+  SportType sport_type = 2;
+  GameType game_type = 3;
+  MatchStatus status = 4;
+  LeagueInfo league = 5;
+  TeamInfo home_team = 6;
+  TeamInfo away_team = 7;
+  int64 schedule_time = 8;  // Unix timestamp (毫秒)
+  int64 source_update_time = 9;  // Unix timestamp (毫秒)
+  optional string live_time = 10;
+  optional ScoreInfo score = 11;
+}
+
+// 盤口資訊
+message MarketInfo {
+  MarketType market_type = 1;
+  HalfType half_type = 2;
+  optional double line = 3;
+  double odds1 = 4;
+  double odds2 = 5;
+  optional double odds3 = 6;
+  bool is_suspended = 7;
+  int64 source_update_time = 8;  // Unix timestamp (毫秒)
+}
+
+// 盤口賠率請求
+message MarketOddsRequest {
+  string source_match_id = 1;
+  repeated MarketInfo markets = 2;
+}
+
+// 比賽結果請求
+message MatchResultRequest {
+  string source_match_id = 1;
+  MatchStatus final_status = 2;
+  int32 home_score = 3;
+  int32 away_score = 4;
+  optional int32 home_half_score = 5;
+  optional int32 away_half_score = 6;
+  optional string period_scores = 7;
+  int64 end_time = 8;  // Unix timestamp (毫秒)
+}
+

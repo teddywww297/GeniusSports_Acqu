@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+import "Protos/sports.proto";
+
+option csharp_namespace = "SportsData.Service";
+
+package SportsData;
+
+message CompetitionRequest {
+	int32 id = 1;
+	google.protobuf.StringValue lang = 2;
+}
+
+message CompetitionResponse {
+  Data sport = 1;
+  int32 regionId = 2;
+  string competitionId = 3;
+  string name = 5;
+  map<string, string> names = 6;
+  repeated int32 teams = 7;
+  bool isPopular = 8;
+  int32 sort = 9;
+  int32 status = 10;
+  string createdBy = 11;
+  google.protobuf.Timestamp createdAt = 12;
+  string updatedBy = 13;
+  google.protobuf.Timestamp updatedAt = 14;
+}
+
+message CompetitionsRequest {
+	int32 sportId = 1;
+	google.protobuf.Int32Value regionId = 2;
+	google.protobuf.StringValue competitionName = 3;
+	google.protobuf.Int32Value status = 4;
+	google.protobuf.StringValue lang = 5;
+	google.protobuf.Int32Value page = 6;
+	google.protobuf.Int32Value pageSize = 7;
+}
+
+message CompetitionsResponse {
+  repeated CompetitionData items = 1;
+}
+
+message CompetitionData {
+  string Id = 1;
+  string name = 2;
+  map<string, string> nameLocalized = 3;
+  int32 regionId = 4;
+  int32 sort = 5;
+  int32 status = 6;
+}
+
+message CreateCompetitionRequest {
+  int32 sportId = 1;
+  int32 regionId = 2;
+  string name = 4;
+  map<string, string> names = 5;
+  int32 sort = 7;
+  map<string, int32> sourceMapping = 8;
+  string updatedBy = 9;
+}
+
+message AddCompetitionFromGenuisRequest {
+  int32 competitionId = 1;
+  string updatedBy = 2;
+}

@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>GS.Acqu.Worker</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.60.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.60.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.25.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <!-- REST API + Swagger -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GS.Acqu.Application\GS.Acqu.Application.csproj" />
+    <ProjectReference Include="..\GS.Acqu.Domain\GS.Acqu.Domain.csproj" />
+    <ProjectReference Include="..\GS.Acqu.Infrastructure\GS.Acqu.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 本地 gRPC Server (供內部使用) -->
+    <Protobuf Include="Protos\acqu.proto" GrpcServices="Server" />
+    
+    <!-- Genius Sports gRPC Client -->
+    <Protobuf Include="Protos\sports.proto" GrpcServices="None" />
+    <Protobuf Include="Protos\competitions.proto" GrpcServices="None" />
+    <Protobuf Include="Protos\teams.proto" GrpcServices="None" />
+    <Protobuf Include="Protos\matches.proto" GrpcServices="None" />
+    <Protobuf Include="Protos\markets.proto" GrpcServices="None" />
+    <Protobuf Include="Protos\sportsdata_service.proto" GrpcServices="Client" />
+  </ItemGroup>
+
+</Project>
